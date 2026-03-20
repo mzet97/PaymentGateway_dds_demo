@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CycloneDDS xmlns="https://cyclonedds.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://cyclonedds.org https://www.omg.org/spec/DDSI-RTPS/2.5 DDSI-RTPS.xsd">
+  <Domain id="0">
+    <Participant name="PaymentGateway">
+      <Topic name="payment.create">
+        <DataRepresentationId value="0"/>
+      </Topic>
+      <Topic name="payment.created">
+        <DataRepresentationId value="0"/>
+      </Topic>
+      <Topic name="payment.approved">
+        <DataRepresentationId value="0"/>
+      </Topic>
+      <Topic name="payment.rejected">
+        <DataRepresentationId value="0"/>
+      </Topic>
+      <Topic name="fraud.check">
+        <DataRepresentationId value="0"/>
+      </Topic>
+      <Topic name="fraud.checked">
+        <DataRepresentationId value="0"/>
+      </Topic>
+      <Topic name="notification.send">
+        <DataRepresentationId value="0"/>
+      </Topic>
+    </Participant>
+  </Domain>
+</CycloneDDS>

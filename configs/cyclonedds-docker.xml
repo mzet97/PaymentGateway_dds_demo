@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CycloneDDS>
+  <Domain id="any">
+    <General>
+      <Interfaces>
+        <NetworkInterface autodetermine="true" />
+      </Interfaces>
+      <AllowMulticast>true</AllowMulticast>
+    </General>
+    <Discovery>
+      <Peers>
+        <Peer address="payment-gateway-api" />
+        <Peer address="payment-processor" />
+        <Peer address="fraud-detector" />
+        <Peer address="notification-service" />
+        <Peer address="settlement-service" />
+        <Peer address="mongo-sync-service" />
+        <Peer address="transaction-history-service" />
+      </Peers>
+    </Discovery>
+  </Domain>
+</CycloneDDS>

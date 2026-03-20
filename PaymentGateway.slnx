@@ -1,0 +1,22 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PaymentGateway.Api/PaymentGateway.Api.csproj" />
+    <Project Path="src/PaymentGateway.Application/PaymentGateway.Application.csproj" />
+    <Project Path="src/PaymentGateway.Domain/PaymentGateway.Domain.csproj" />
+    <Project Path="src/PaymentGateway.Infrastructure/PaymentGateway.Infrastructure.csproj" />
+    <Project Path="src/PaymentGateway.Persistence/PaymentGateway.Persistence.csproj" />
+    <Project Path="src/PaymentGateway.Migrations/PaymentGateway.Migrations.csproj" />
+  </Folder>
+  <Folder Name="/src/services/">
+    <Project Path="src/services/PaymentGateway.Services.FraudDetector/PaymentGateway.Services.FraudDetector.csproj" />
+    <Project Path="src/services/PaymentGateway.Services.MongoSync/PaymentGateway.Services.MongoSync.csproj" />
+    <Project Path="src/services/PaymentGateway.Services.Notification/PaymentGateway.Services.Notification.csproj" />
+    <Project Path="src/services/PaymentGateway.Services.PaymentProcessor/PaymentGateway.Services.PaymentProcessor.csproj" />
+    <Project Path="src/services/PaymentGateway.Services.Settlement/PaymentGateway.Services.Settlement.csproj" />
+    <Project Path="src/services/PaymentGateway.Services.TransactionHistory/PaymentGateway.Services.TransactionHistory.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PaymentGateway.IntegrationTests/PaymentGateway.IntegrationTests.csproj" />
+    <Project Path="tests/PaymentGateway.UnitTests/PaymentGateway.UnitTests.csproj" />
+  </Folder>
+</Solution>

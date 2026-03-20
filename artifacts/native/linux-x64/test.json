@@ -1,0 +1,18 @@
+{
+  "File":
+    [
+      {
+        "Name": "/tmp/test.idl",
+        "_eof": 0
+      }
+    ],
+  "Types":
+    [
+      {
+        "Name": "Test",
+        "Kind": "struct",
+        "Extensibility": "final",
+        "_eof": 0
+      }
+    ]
+}

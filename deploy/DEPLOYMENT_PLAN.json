@@ -1,0 +1,92 @@
+{
+  "timestamp": "2026-03-17T13:53:52.911426",
+  "deployment_dir": "E:\\TI\\git\\tese\\CycloneDds.NET\\demo\\PaymentGateway\\deploy",
+  "repo_root": "E:\\TI\\git\\tese\\CycloneDds.NET",
+  "vms": {
+    "api_server": {
+      "ip": "192.168.1.61",
+      "user": "oldds",
+      "pass": "Admin@123",
+      "role": "API + Microservices"
+    },
+    "orchestrator": {
+      "ip": "192.168.1.62",
+      "user": "oldds",
+      "pass": "Admin@123",
+      "role": "Coordinator"
+    },
+    "client": {
+      "ip": "192.168.1.63",
+      "user": "oldds",
+      "pass": "Admin@123",
+      "role": "Load Testing"
+    }
+  },
+  "phases": [
+    {
+      "phase": 1,
+      "name": "VM Setup + DNS",
+      "target_vms": [
+        "all"
+      ],
+      "estimated_duration": "5 min"
+    },
+    {
+      "phase": 2,
+      "name": "EF Core Migrations",
+      "target_vms": [
+        "api_server"
+      ],
+      "estimated_duration": "5 min"
+    },
+    {
+      "phase": 3,
+      "name": "Docker Build + Deploy",
+      "target_vms": [
+        "api_server"
+      ],
+      "estimated_duration": "35 min"
+    },
+    {
+      "phase": 4,
+      "name": "Kibana Setup",
+      "target_vms": [
+        "orchestrator"
+      ],
+      "estimated_duration": "5 min"
+    },
+    {
+      "phase": 5,
+      "name": "Backend Tests",
+      "target_vms": [
+        "api_server"
+      ],
+      "estimated_duration": "5 min"
+    },
+    {
+      "phase": 6,
+      "name": "Load Testing",
+      "target_vms": [
+        "client"
+      ],
+      "estimated_duration": "10 min"
+    },
+    {
+      "phase": 7,
+      "name": "Frontend Deploy",
+      "target_vms": [
+        "api_server"
+      ],
+      "estimated_duration": "10 min"
+    },
+    {
+      "phase": 8,
+      "name": "Final Report",
+      "target_vms": [
+        "all"
+      ],
+      "estimated_duration": "1 min"
+    }
+  ],
+  "total_estimated_duration": "86 min"
+}
