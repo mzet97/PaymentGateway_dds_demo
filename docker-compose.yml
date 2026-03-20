@@ -1,0 +1,171 @@
+version: '3.8'
+
+x-common-env: &common-env
+  ConnectionStrings__DefaultConnection: Host=spsql.home.arpa;Port=5432;Database=demo-gateway;Username=app;Password=Admin@123
+  ConnectionStrings__MongoDb: mongodb://admin:Admin%40123@mongodb.home.arpa:27017/?authSource=admin
+  ConnectionStrings__Redis: redis.home.arpa:30379,password=Admin@123,abortConnect=false
+  Redis__ConnectionString: redis.home.arpa:30379,password=Admin@123,abortConnect=false
+  Dds__UseRealDds: "true"
+  Dds__EnableGracefulFallback: "true"
+  Dds__TelemetrySamplingRate: "0.1"
+  Dds__TimeoutMs: "5000"
+  CYCLONEDDS_URI: file:///app/cyclonedds-docker.xml
+  Telemetry__EnableElasticsearchLogging: "false"
+  Telemetry__EnableOtlp: "false"
+  Logging__LogLevel__Default: Information
+
+x-dds-volume: &dds-volume
+  - ./configs/cyclonedds-docker.xml:/app/cyclonedds-docker.xml:ro
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/PaymentGateway.Api/Dockerfile
+    container_name: payment-gateway-api
+    ports:
+      - "5000:5000"
+    environment:
+      <<: *common-env
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:5000
+      SKIP_DB_INITIALIZER: "true"
+      Minio__Endpoint: minio-s3.home.arpa
+      Minio__AccessKey: admin
+      Minio__SecretKey: Admin@123
+      Minio__BucketName: demo-gateway
+      Minio__UseSsl: "true"
+      Dds__CircuitBreakerFailureThreshold: "5"
+      Dds__CircuitBreakerRecoveryIntervalSeconds: "30"
+      OpenRouter__ApiKey: ${OPENROUTER_API_KEY:-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}
+      OpenRouter__BaseUrl: https://openrouter.ai/api/v1
+      OpenRouter__Model: minimax/minimax-m2.5
+      Logging__LogLevel__Microsoft: Warning
+    volumes: *dds-volume
+    networks:
+      - payment-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+  processor:
+    build:
+      context: .
+      dockerfile: src/services/PaymentGateway.Services.PaymentProcessor/Dockerfile
+    container_name: payment-processor
+    environment:
+      <<: *common-env
+    volumes: *dds-volume
+    networks:
+      - payment-network
+    restart: unless-stopped
+
+  fraud-detector:
+    build:
+      context: .
+      dockerfile: src/services/PaymentGateway.Services.FraudDetector/Dockerfile
+    container_name: fraud-detector
+    environment:
+      <<: *common-env
+      OpenRouter__ApiKey: ${OPENROUTER_API_KEY:-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}
+      OpenRouter__BaseUrl: https://openrouter.ai/api/v1
+      OpenRouter__Model: minimax/minimax-m2.5
+    volumes: *dds-volume
+    networks:
+      - payment-network
+    restart: unless-stopped
+
+  notification:
+    build:
+      context: .
+      dockerfile: src/services/PaymentGateway.Services.Notification/Dockerfile
+    container_name: notification-service
+    environment:
+      <<: *common-env
+      WEBHOOK_SECRET: webhook-secret-demo-2026
+    volumes: *dds-volume
+    networks:
+      - payment-network
+    restart: unless-stopped
+
+  settlement:
+    build:
+      context: .
+      dockerfile: src/services/PaymentGateway.Services.Settlement/Dockerfile
+    container_name: settlement-service
+    environment:
+      <<: *common-env
+    volumes: *dds-volume
+    networks:
+      - payment-network
+    restart: unless-stopped
+
+  mongo-sync:
+    build:
+      context: .
+      dockerfile: src/services/PaymentGateway.Services.MongoSync/Dockerfile
+    container_name: mongo-sync-service
+    environment:
+      <<: *common-env
+    volumes: *dds-volume
+    networks:
+      - payment-network
+    restart: unless-stopped
+
+  transaction-history:
+    build:
+      context: .
+      dockerfile: src/services/PaymentGateway.Services.TransactionHistory/Dockerfile
+    container_name: transaction-history-service
+    environment:
+      <<: *common-env
+    volumes: *dds-volume
+    networks:
+      - payment-network
+    restart: unless-stopped
+
+  webhook-receiver:
+    build:
+      context: ./webhook-receiver
+      dockerfile: Dockerfile
+    container_name: webhook-receiver
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+      WEBHOOK_SECRET: webhook-secret-demo-2026
+    networks:
+      - payment-network
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4000/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./web/payment_gateway_web
+      dockerfile: Dockerfile
+    container_name: payment-gateway-web
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      API_URL: http://payment-gateway-api:5000
+    networks:
+      - payment-network
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  payment-network:
+    driver: bridge

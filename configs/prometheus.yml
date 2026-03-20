@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'payment-gateway'
+    environment: 'production'
+
+# Note: Console app services (processor, fraud-detector, etc.) do not expose HTTP metrics
+# Metrics are collected via Serilog -> Elasticsearch + OpenTelemetry -> Elasticsearch APM
+# Only the API service exposes Prometheus metrics endpoint
+
+scrape_configs:
+  # Payment Gateway API - only service with HTTP metrics endpoint
+  - job_name: 'paymentgateway-api'
+    static_configs:
+      - targets: ['api:5000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 5s

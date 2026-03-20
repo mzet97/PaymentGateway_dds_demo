@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CycloneDDS>
+  <Domain id="any">
+    <General>
+      <Interfaces>
+        <NetworkInterface autodetermine="true" />
+      </Interfaces>
+      <AllowMulticast>spdp</AllowMulticast>
+    </General>
+    <Discovery>
+      <Peers>
+        <Peer address="localhost" />
+      </Peers>
+    </Discovery>
+  </Domain>
+</CycloneDDS>
