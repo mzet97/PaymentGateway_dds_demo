@@ -18,7 +18,7 @@
     <PackageReference Include="StackExchange.Redis" Version="2.11.8" />
 
     <!-- CycloneDDS -->
-    <PackageReference Include="CycloneDDS.NET" Version="0.1.26-gb8a79ab043" />
+    <PackageReference Include="CycloneDDS.NET" Version="0.2.16-g28202bb55a" />
 
     <!-- Microsoft Extensions -->
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
