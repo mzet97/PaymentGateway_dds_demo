@@ -3,6 +3,7 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.1.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
+  <PackageReference Include="OpenTelemetry.Api" Version="1.15.3" />
     <PackageReference Include="Paramore.Brighter" Version="10.0.3" />
     <PackageReference Include="Paramore.Brighter.Extensions.DependencyInjection" Version="10.0.2" />
     <PackageReference Include="Paramore.Darker" Version="4.1.1" />
